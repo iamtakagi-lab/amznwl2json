@@ -8,8 +8,12 @@ const baseUrl = 'https://www.amazon.co.jp/hz/wishlist/ls/';
 const execute = async (wishlistId: string) => {
   const { puppeteer } = chromium
   const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: chromium.args,
+    executablePath: await chromium.executablePath,
+    env: {
+      ...process.env,
+      LANG: "ja_JP.UTF-8"
+    }
   });
   try {
     const page = await init(browser)
@@ -78,7 +82,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   try {
     const data = await execute(wishlistId)
     res.setHeader('Content-Type', 'application/json')
-    res.json(data) 
+    res.json(data)
   } catch (error) {
     console.error(error)
     res.status(500)
