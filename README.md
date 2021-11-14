@@ -1,17 +1,5 @@
 # amznwl2json
 
-## Structure
-
-### Product Type
-Expressed in TypeScript, it looks like the following type.
-
-```ts
-type Product = {
-  id: string
-  name: string
-}
-```
-
 ## Usage
 - GET: `https://amznwl2json.vercel.app/convert/:wishlistId`
     - ```json
@@ -27,4 +15,4 @@ type Product = {
       ```
 
 ## LICENCE
-MIT Licence
+iamtakagi/amznwl2json is provided under the MIT license.
