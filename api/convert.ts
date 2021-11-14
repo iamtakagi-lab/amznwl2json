@@ -57,7 +57,7 @@ const scrape = async (page: Page) => {
           .replace('/dp/', '');
         const title = el.querySelector('[id^="item_title_"]').textContent
         let price = -1;
-        const priceEle = el.querySelector('[id^="itemPrice_"] > span')
+        const priceEle = el.querySelector('[id^="itemPrice_"] > span.a-offscreen')
         if (priceEle && priceEle.textContent) {
           price = Number(
             priceEle.textContent.replace('￥', '').replace(',', '')
