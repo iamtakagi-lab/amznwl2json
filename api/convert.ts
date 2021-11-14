@@ -5,6 +5,11 @@ import { devices, Browser, Page } from "puppeteer-core"
 const device = devices['iPhone 8'];
 const baseUrl = 'https://www.amazon.co.jp/hz/wishlist/ls/'
 
+type Product = {
+  id: string
+  name: string
+}
+
 const convert = async (wishlistId: string) => {
   const { puppeteer } = chromium
   const browser = await puppeteer.launch({
@@ -48,21 +53,21 @@ const scrape = async (page: Page) => {
       });
     }
 
-    const data = [];
+    const products: Product[] = []
     document.querySelectorAll('a[href^="/dp/"].a-touch-link').forEach(
       el => {
-        const productId = el
+        const id = el
           .getAttribute('href')
           .split('/?coliid')[0]
           .replace('/dp/', '')
         const name = el.querySelector('[id^="item_title_"]').textContent.trim()
-        data.push({
-          productId,
-          name,
+        products.push({
+          id,
+          name
         })
       }
     )
-    return data
+    return products
   })
 }
 
@@ -72,9 +77,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   if (typeof wishlistId !== "string") return res.status(400).write("invalid type: wishlistId")
 
   try {
-    const data = await convert(wishlistId)
+    const products = await convert(wishlistId)
     res.setHeader('Content-Type', 'application/json')
-    res.json(data)
+    res.json(products)
   } catch (error) {
     console.error(error)
     res.status(500)
