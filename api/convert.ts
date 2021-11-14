@@ -1,9 +1,9 @@
 import chromium from "chrome-aws-lambda"
 import { VercelRequest, VercelResponse } from "@vercel/node"
-import { devices, Browser, Page } from "puppeteer-core";
+import { devices, Browser, Page } from "puppeteer-core"
 
 const device = devices['iPhone 8'];
-const baseUrl = 'https://www.amazon.co.jp/hz/wishlist/ls/';
+const baseUrl = 'https://www.amazon.co.jp/hz/wishlist/ls/'
 
 const execute = async (wishlistId: string) => {
   const { puppeteer } = chromium
@@ -14,7 +14,7 @@ const execute = async (wishlistId: string) => {
       ...process.env,
       LANG: "ja_JP.UTF-8"
     }
-  });
+  })
   try {
     const page = await init(browser)
     await page.goto(baseUrl + wishlistId)
@@ -54,20 +54,20 @@ const scrape = async (page: Page) => {
         const productId = el
           .getAttribute('href')
           .split('/?coliid')[0]
-          .replace('/dp/', '');
+          .replace('/dp/', '')
         const title = el.querySelector('[id^="item_title_"]').textContent
-        const priceEle = el.querySelector('[id^="itemPrice_"] > span')
+        const priceEle = el.querySelector('[id^="itemPrice_"] > span.a-offscreen')
         const price = Number(
             priceEle.textContent.replace('￥', '').replace(',', '')
-        );
+        )
         data.push({
           price,
           title,
           productId
         })
       }
-    );
-    return data;
+    )
+    return data
   })
 }
 
