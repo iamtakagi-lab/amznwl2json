@@ -5,7 +5,7 @@ import { devices, Browser, Page } from "puppeteer-core"
 const device = devices['iPhone 8'];
 const baseUrl = 'https://www.amazon.co.jp/hz/wishlist/ls/'
 
-const execute = async (wishlistId: string) => {
+const convert = async (wishlistId: string) => {
   const { puppeteer } = chromium
   const browser = await puppeteer.launch({
     args: chromium.args,
@@ -55,14 +55,17 @@ const scrape = async (page: Page) => {
           .getAttribute('href')
           .split('/?coliid')[0]
           .replace('/dp/', '')
-        const title = el.querySelector('[id^="item_title_"]').textContent
-        const priceEle = el.querySelector('[id^="itemPrice_"] > span.a-offscreen')
-        const price = Number(
+        const name = el.querySelector('[id^="item_title_"]').textContent
+        let price = -1
+        const priceEle = el.querySelector('[id^="itemPrice_"] > span:nth-child(2)')
+        if (priceEle && priceEle.textContent) {
+          price = Number(
             priceEle.textContent.replace('￥', '').replace(',', '')
-        )
+          );
+        }
         data.push({
           price,
-          title,
+          name,
           productId
         })
       }
@@ -77,7 +80,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   if (typeof wishlistId !== "string") return res.status(400).write("invalid type: wishlistId")
 
   try {
-    const data = await execute(wishlistId)
+    const data = await convert(wishlistId)
     res.setHeader('Content-Type', 'application/json')
     res.json(data)
   } catch (error) {
