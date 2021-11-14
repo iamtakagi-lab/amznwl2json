@@ -56,17 +56,9 @@ const scrape = async (page: Page) => {
           .split('/?coliid')[0]
           .replace('/dp/', '')
         const name = el.querySelector('[id^="item_title_"]').textContent.trim()
-        let price = -1
-        const priceEle = el.querySelector('[id^="itemPrice_"] > span:nth-child(2) > span.a-price-whole')
-        if (priceEle && priceEle.textContent) {
-          price = Number(
-            priceEle.textContent
-          )
-        }
         data.push({
           productId,
           name,
-          price
         })
       }
     )
