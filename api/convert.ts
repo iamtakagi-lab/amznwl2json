@@ -55,7 +55,7 @@ const scrape = async (page: Page) => {
           .getAttribute('href')
           .split('/?coliid')[0]
           .replace('/dp/', '')
-        const name = el.querySelector('[id^="item_title_"]').textContent
+        const name = el.querySelector('[id^="item_title_"]').textContent.trim()
         let price = -1
         const priceEle = el.querySelector('[id^="itemPrice_"]')
         if (priceEle && priceEle.textContent) {
