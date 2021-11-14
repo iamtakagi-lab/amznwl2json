@@ -57,16 +57,16 @@ const scrape = async (page: Page) => {
           .replace('/dp/', '')
         const name = el.querySelector('[id^="item_title_"]').textContent.trim()
         let price = -1
-        const priceEle = el.querySelector('[id^="itemPrice_"]')
+        const priceEle = el.querySelector('[id^="itemPrice_"] > span:nth-child(2) > span.a-price-whole')
         if (priceEle && priceEle.textContent) {
           price = Number(
-            priceEle.textContent.replace('￥', '').replace(',', '')
-          );
+            priceEle.textContent
+          )
         }
         data.push({
-          price,
+          productId,
           name,
-          productId
+          price
         })
       }
     )
